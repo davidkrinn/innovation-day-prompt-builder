@@ -135,13 +135,18 @@
 
       <form id="promptForm">
         <div class="field">
-          <label class="title" for="character">Field 1: Character</label>
+          <label class="title" for="character">Field 1: Hero</label>
           <input id="character" name="character" type="text" required />
         </div>
 
         <div class="field">
+          <label class="title" for="heroDescription">Field 2: Hero description</label>
+          <input id="heroDescription" name="heroDescription" type="text" required />
+        </div>
+
+        <div class="field">
           <span class="title" style="display: block; font-weight: 700; margin-bottom: 8px"
-            >Field 2: Story</span
+            >Field 3: Story</span
           >
           <div class="radio-group" role="radiogroup" aria-label="Story selection">
             <label class="radio-option">
@@ -156,7 +161,7 @@
         </div>
 
         <div class="field">
-          <label class="title" for="style">Field 3: Style</label>
+          <label class="title" for="style">Field 4: Style</label>
           <input id="style" name="style" type="text" required />
         </div>
 
@@ -183,16 +188,22 @@
         event.preventDefault();
 
         const character = document.getElementById("character").value.trim();
+        const heroDescription = document.getElementById("heroDescription").value.trim();
         const style = document.getElementById("style").value.trim();
         const selectedStory = form.elements.story.value;
 
-        let prompt = "";
+        const article = /^[aeiou]/i.test(character) ? "an" : "a";
+        const heroIntro = `Our hero is ${article} ${character}. The following describes our hero. They are ${heroDescription}.`;
+
+        let storyPrompt = "";
 
         if (selectedStory === "return") {
-          prompt = `${character} exists in a world where everyone is called back to the office. When the office vibe becomes overwhelming, everything changes. But through one small, unexpected moment of connection at the office, ${character} surprisingly and happily discovers home isn't a place — it's possible anywhere.\n\nVisual style: ${style}. Emotionally resonant. No dialogue.`;
+          storyPrompt = `${character} exists in a world where everyone is called back to the office. When the office vibe becomes overwhelming, everything changes. But through one small, unexpected moment of connection at the office, ${character} surprisingly and happily discovers home isn't a place — it's possible anywhere.\n\nVisual style: ${style}. Emotionally resonant. No dialogue.`;
         } else {
-          prompt = `Our hero, ${character}, defeatedly trudges alone through a vast, fog-covered landscape of crumbling stone archways and overgrown paths — clutching a bundle of belongings. A sudden wind tears the bundle away, scattering everything into the mist — except one small precious object (like a snow globe, a photograph, a small lantern, a worn compass) that rolls to a stop at our hero’s feet, glowing faintly from within. They cradle it gently and look up with a sense of hope — the fog parts to reveal a single lantern-lit path winding toward a warm, distant light on the horizon.\n\nVisual style: ${style}. Dusk palette — deep indigo, fog grey, and warm amber. Continuous fluid motion. Emotionally resonant. No dialogue. No text on screen.`;
+          storyPrompt = `Our hero, ${character}, defeatedly trudges alone through a vast, fog-covered landscape of crumbling stone archways and overgrown paths — clutching a bundle of belongings. A sudden wind tears the bundle away, scattering everything into the mist — except one small precious object (like a snow globe, a photograph, a small lantern, a worn compass) that rolls to a stop at our hero’s feet, glowing faintly from within. They cradle it gently and look up with a sense of hope — the fog parts to reveal a single lantern-lit path winding toward a warm, distant light on the horizon.\n\nVisual style: ${style}. Dusk palette — deep indigo, fog grey, and warm amber. Continuous fluid motion. Emotionally resonant. No dialogue. No text on screen.`;
         }
+
+        const prompt = `${heroIntro}\n\n${storyPrompt}`;
 
         output.textContent = prompt;
         copyStatus.textContent = "";
