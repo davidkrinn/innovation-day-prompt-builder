@@ -153,10 +153,80 @@
               <input type="radio" name="story" value="return" checked />
               <span>Return to office</span>
             </label>
+            <div
+              id="vibeField"
+              class="field"
+              style="margin: 8px 0 8px 24px; padding-left: 12px; border-left: 2px solid var(--border)"
+            >
+              <span class="title" style="display: block; font-weight: 700; margin-bottom: 8px"
+                >When the vibe in the office becomes overwhelming…</span
+              >
+              <div class="radio-group" role="radiogroup" aria-label="Vibe selection">
+                <label class="radio-option">
+                  <input type="radio" name="vibe" value="and the printer starts shooting papers" checked />
+                  <span>and the printer starts shooting papers.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="vibe" value="and their computer starts to smoke" />
+                  <span>and their computer starts to smoke.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="vibe" value="and their chair breaks from underneath them" />
+                  <span>and their chair breaks from underneath them.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="vibe" value="and there are no more donuts left" />
+                  <span>and there are no more donuts left.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="vibe" value="and all the coffee is gone" />
+                  <span>and all the coffee is gone.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="vibe" value="" />
+                  <span>None</span>
+                </label>
+              </div>
+            </div>
             <label class="radio-option">
               <input type="radio" name="story" value="home" />
               <span>Finding your way home</span>
             </label>
+            <div
+              id="locationField"
+              class="field"
+              style="margin: 8px 0 8px 24px; padding-left: 12px; border-left: 2px solid var(--border)"
+            >
+              <span class="title" style="display: block; font-weight: 700; margin-bottom: 8px"
+                >through a vast, fog-covered landscape of crumbling stone archways and overgrown paths…</span
+              >
+              <div class="radio-group" role="radiogroup" aria-label="Location selection">
+                <label class="radio-option">
+                  <input type="radio" name="location" value="on Mars" checked />
+                  <span>on Mars.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="location" value="in the jungle" />
+                  <span>in the jungle.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="location" value="in an abandoned old west town" />
+                  <span>in an abandoned old west town.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="location" value="underwater" />
+                  <span>underwater.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="location" value="in ancient desert" />
+                  <span>in ancient desert.</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="location" value="" />
+                  <span>None</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -188,6 +258,19 @@
       const output = document.getElementById("promptOutput");
       const copyButton = document.getElementById("copyButton");
       const copyStatus = document.getElementById("copyStatus");
+      const vibeField = document.getElementById("vibeField");
+      const locationField = document.getElementById("locationField");
+
+      function updateVibeVisibility() {
+        const story = form.elements.story.value;
+        vibeField.style.display = story === "return" ? "" : "none";
+        locationField.style.display = story === "home" ? "" : "none";
+      }
+
+      updateVibeVisibility();
+      form.elements.story.forEach((radio) => {
+        radio.addEventListener("change", updateVibeVisibility);
+      });
 
       form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -197,6 +280,8 @@
         const style = document.getElementById("style").value.trim();
         const audio = document.getElementById("audio").value.trim();
         const selectedStory = form.elements.story.value;
+        const selectedVibe = form.elements.vibe.value;
+        const selectedLocation = form.elements.location.value;
 
         const article = /^[aeiou]/i.test(character) ? "an" : "a";
         const heroIntro = `Our hero is ${article} ${character}. The following describes our hero. ${heroDescription}.`;
@@ -204,9 +289,11 @@
         let storyPrompt = "";
 
         if (selectedStory === "return") {
-          storyPrompt = `${character} exists in a world where everyone is called back to the office. When the office vibe becomes overwhelming, everything changes. But through one small, unexpected moment of connection at the office, ${character} surprisingly and happily discovers home isn't a place — it's possible anywhere.\n\nVisual style: ${style}. Emotionally resonant. No dialogue. Fade in happy acoustic music in the last 5 seconds`;
+          const vibeClause = selectedVibe ? `${selectedVibe}, ` : "";
+          storyPrompt = `${character} exists in a world where everyone is called back to the office. When the office vibe becomes overwhelming, ${vibeClause}everything changes. But through one small, unexpected moment of connection at the office, ${character} surprisingly and happily discovers home isn't a place — it's possible anywhere.\n\nVisual style: ${style}. Emotionally resonant. `;
         } else {
-          storyPrompt = `Our hero, ${character}, defeatedly trudges alone through a vast, fog-covered landscape of crumbling stone archways and overgrown paths — clutching a bundle of belongings. A sudden wind tears the bundle away, scattering everything into the mist — except one small precious object (like a snow globe, a photograph, a small lantern, a worn compass) that rolls to a stop at our hero’s feet, glowing faintly from within. They cradle it gently and look up with a sense of hope — the fog parts to reveal a single lantern-lit path winding toward a warm, distant light on the horizon.\n\nVisual style: ${style}. Dusk palette — deep indigo, fog grey, and warm amber. Continuous fluid motion. Emotionally resonant. Fade in happy orchestral music in last 5 seconds. No dialogue. No text on screen.`;
+          const locationClause = selectedLocation ? ` ${selectedLocation}` : "";
+          storyPrompt = `Our hero, ${character}, defeatedly trudges alone through a vast, fog-covered landscape of crumbling stone archways and overgrown paths${locationClause} — clutching a bundle of belongings. A sudden wind tears the bundle away, scattering everything into the mist — except one small precious object (like a snow globe, a photograph, a small lantern, a worn compass) that rolls to a stop at our hero’s feet, glowing faintly from within. They cradle it gently and look up with a sense of hope — the fog parts to reveal a single lantern-lit path winding toward a warm, distant light on the horizon.\n\nVisual style: ${style}. Dusk palette — deep indigo, fog grey, and warm amber. Continuous fluid motion. Emotionally resonant. No text on screen.`;
         }
 
         const prompt = `${heroIntro}\n\n${storyPrompt}\n\nAudio considerations: ${audio}.`;
