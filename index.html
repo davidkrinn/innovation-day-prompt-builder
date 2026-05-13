@@ -193,7 +193,7 @@
         const selectedStory = form.elements.story.value;
 
         const article = /^[aeiou]/i.test(character) ? "an" : "a";
-        const heroIntro = `Our hero is ${article} ${character}. The following describes our hero. They are ${heroDescription}.`;
+        const heroIntro = `Our hero is ${article} ${character}. The following describes our hero. ${heroDescription}.`;
 
         let storyPrompt = "";
 
