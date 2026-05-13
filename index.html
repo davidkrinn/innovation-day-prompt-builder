@@ -134,6 +134,9 @@
       <p class="helper">Fill out the fields and click Create prompt.</p>
 
       <form id="promptForm">
+        <div style="margin-bottom: 16px">
+          <button id="clearButton" type="button">Clear fields</button>
+        </div>
         <div class="field">
           <label class="title" for="character">Field 1: Hero</label>
           <input id="character" name="character" type="text" required />
@@ -258,6 +261,7 @@
       const output = document.getElementById("promptOutput");
       const copyButton = document.getElementById("copyButton");
       const copyStatus = document.getElementById("copyStatus");
+      const clearButton = document.getElementById("clearButton");
       const vibeField = document.getElementById("vibeField");
       const locationField = document.getElementById("locationField");
 
@@ -299,6 +303,13 @@
         const prompt = `${heroIntro}\n\n${storyPrompt}\n\nAudio considerations: ${audio}.`;
 
         output.textContent = prompt;
+        copyStatus.textContent = "";
+      });
+
+      clearButton.addEventListener("click", function () {
+        form.reset();
+        updateVibeVisibility();
+        output.textContent = "Your generated prompt will appear here.";
         copyStatus.textContent = "";
       });
 
