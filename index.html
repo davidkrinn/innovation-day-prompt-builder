@@ -126,12 +126,97 @@
         white-space: pre-wrap;
         line-height: 1.5;
       }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal.open {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: var(--card);
+        padding: 24px;
+        border-radius: 16px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(19, 27, 31, 0.15);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--muted);
+        padding: 0;
+        width: auto;
+        height: auto;
+      }
+
+      .close-modal:hover {
+        color: var(--ink);
+        background: none;
+      }
+
+      .modal-text {
+        color: var(--ink);
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .tips-link {
+        color: var(--accent);
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: 0.95rem;
+        margin-top: 6px;
+        display: inline-block;
+      }
+
+      .tips-link:hover {
+        color: var(--accent-hover);
+      }
     </style>
   </head>
   <body>
     <main class="app">
       <h1>Prompt Builder</h1>
-      <p class="helper">Fill out the fields and click Create prompt.</p>
+      <p class="helper">Fill out the fields to easily build your prompt.</p>
 
       <form id="promptForm">
         <div style="margin-bottom: 16px">
@@ -145,6 +230,7 @@
         <div class="field">
           <label class="title" for="heroDescription">Field 2: Hero description</label>
           <input id="heroDescription" name="heroDescription" type="text" required />
+          <div class="tips-link" id="tipsLink">tips for writing a description</div>
         </div>
 
         <div class="field">
@@ -154,7 +240,7 @@
           <div class="radio-group" role="radiogroup" aria-label="Story selection">
             <label class="radio-option">
               <input type="radio" name="story" value="return" checked />
-              <span>Return to office</span>
+              <span>In the office</span>
             </label>
             <div
               id="vibeField"
@@ -256,6 +342,18 @@
       </section>
     </main>
 
+    <div id="tipsModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Tips for Writing a Description</h2>
+          <button class="close-modal" id="closeModal">&times;</button>
+        </div>
+        <p class="modal-text">
+          When describing the hero, if the hero is a known character, like Superman, it is best to describe the character as "a person wearing a superman costume". Then you can go on to describe in detail what the costume and character looks like.
+        </p>
+      </div>
+    </div>
+
     <script>
       const form = document.getElementById("promptForm");
       const output = document.getElementById("promptOutput");
@@ -264,6 +362,23 @@
       const clearButton = document.getElementById("clearButton");
       const vibeField = document.getElementById("vibeField");
       const locationField = document.getElementById("locationField");
+      const tipsLink = document.getElementById("tipsLink");
+      const tipsModal = document.getElementById("tipsModal");
+      const closeModal = document.getElementById("closeModal");
+
+      tipsLink.addEventListener("click", function () {
+        tipsModal.classList.add("open");
+      });
+
+      closeModal.addEventListener("click", function () {
+        tipsModal.classList.remove("open");
+      });
+
+      tipsModal.addEventListener("click", function (event) {
+        if (event.target === tipsModal) {
+          tipsModal.classList.remove("open");
+        }
+      });
 
       function updateVibeVisibility() {
         const story = form.elements.story.value;
